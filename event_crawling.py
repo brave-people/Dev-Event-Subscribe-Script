@@ -2,8 +2,6 @@ import requests
 import os
 
 from bs4 import BeautifulSoup
-from datetime import datetime
-from pytz import timezone
 
 def get_html(url) -> str:
     """
@@ -46,6 +44,35 @@ def find_due_day(body):
     MnD = month + day
     return [month,day,MnD]
 
+def get_event_script(event):
+    """
+    event에서 
+    param event_body -> event / soup Object
+    return arr(str)
+    arr[0] = title
+    arr[1] = link
+    arr[2] = date
+    arr[3] = host
+    arr[4] = due
+    """
+    event_body = event.findAll("li")
+    event_title = event.find("strong")
+    
+    # link 추출 / 2월과 3월이 다름
+    if len(event_body) == 3:
+        link = event_title.select("a")[0].attrs['href']
+    elif len(event_body) == 4:
+        link = event_body[3].select("a")[0].attrs['href']
+    else:
+        link = "."
+        
+    date = event_body[2].text
+    host = event_body[1].text
+    due = find_due_day(event_body[2])[2]
+    
+    return [event_title.text, link, date, host, due]
+    
+
 def content_list(events, day):
     """
     event 데이터를 추출, issue의 Body로 정리함.
@@ -55,14 +82,22 @@ def content_list(events, day):
     return str
     """
     current_content = '' # output
-    
+
     for event in events:
-        event_body = event.findAll("li")
-        event_title = event.find("strong")
-        
-        if len(event_body) > 0: # 내용이 존재하는 Object만 연산
-            link = event_body[3].select("a")[0].attrs['href']
-            due_date = find_due_day(event_body[2])
-            if day <= int(due_date[2]):
-                content = f"[{event_title.text}]({link})" + "\n -" + event_body[2].text + "\n -"+ event_body[1].text + " <br/>\n "
+        if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
+            event_arr = get_event_script(event)
+            if day <= int(event_arr[4]):
+                content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
+                
+    return current_content
+                
+def __main__():
+    url = 'https://github.com/brave-people/Dev-Event'
+    date_now = 210 # 지금 날짜 int형으로
+    html = get_html(url)
+    event = split_event_html(html)
+    print(content_list(event, date_now))
+
+if __name__ == '__main__':
+    __main__()
