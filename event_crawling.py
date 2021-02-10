@@ -73,7 +73,7 @@ def get_event_script(event):
     return [event_title.text, link, date, host, due]
     
 
-def content_list(events, day):
+def content_list(script_title, script_body, events, day):
     """
     event 데이터를 추출, issue의 Body로 정리함.
     param events -> 이벤트의 리스트, 쓰레기 데이터가 존재함. / soup Object List
@@ -81,7 +81,7 @@ def content_list(events, day):
     
     return str
     """
-    current_content = '' # output
+    current_content = f"## {script_title}\n### {script_body}\n\n" # output
 
     for event in events:
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
@@ -97,7 +97,11 @@ def __main__():
     date_now = 210 # 지금 날짜 int형으로
     html = get_html(url)
     event = split_event_html(html)
-    print(content_list(event, date_now))
+    
+    script_title = "Dev-Event"
+    script_body = "이벤트 알려드립니다."
+    
+    print(content_list(script_title, script_body, event, date_now))
 
 if __name__ == '__main__':
     __main__()

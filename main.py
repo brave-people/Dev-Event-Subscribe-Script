@@ -10,6 +10,10 @@ if __name__ == "__main__":
     access_token = os.environ['MY_GITHUB_TOKEN']
     repository_name = "Dev-Event-Subscribe"
     event_url = 'https://github.com/brave-people/Dev-Event'
+    
+    # 스크립트 상단에 소개 및 공지문구
+    script_title = 'Dev-Event'
+    script_body = '안녕하세요. 용감한 친구들입니다.'
 
     seoul_timezone = timezone('Asia/Seoul')
     today = datetime.now(seoul_timezone)
@@ -21,7 +25,7 @@ if __name__ == "__main__":
     
     title = f"오늘의 이벤트 - {today_title}"
     
-    content = content_list(event_object, today_int)
+    content = content_list(script_title, script_body, event_object, today_int)
     
     # repo에 접근
     g = Github(access_token)
