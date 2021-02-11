@@ -1,0 +1,34 @@
+name: Dev_Event_Crawler
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 11 * * 0'
+  # 꿀팁 : 한국의 자정은 "0 15 * * *"이다
+  # 그럼 '0 0 * * *'은 주말 저녁에 보기 좋은 8시다.  
+  # * * * * 0 은 일요일에 실행됨을 의미한다.
+  # limm-jk.tistory.com/35
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    
+    - name: Install requirements.txt
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run Crawler & Make Issue
+      run: |
+        python main.py
+      env:
+        MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
