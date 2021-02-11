@@ -17,13 +17,16 @@ if __name__ == "__main__":
 
     seoul_timezone = timezone('Asia/Seoul')
     today = datetime.now(seoul_timezone)
-    today_title = today.strftime("%Y년 %m월 %d일")
+    now_month = int(today.strftime('%m'))
+    now_day = int(today.strftime('%d'))
+    week = int(now_day/7) + 1
+    
     today_int = int(today.strftime('%m%d'))
     
     event_html = get_html(event_url)
     event_object = split_event_html(event_html)
     
-    title = f"오늘의 이벤트 - {today_title}"
+    title = f"주간 Dev Event - {now_month}월 {week}째주 개발자 행사"
     
     content = content_list(script_title, event_object, today_int)
     
