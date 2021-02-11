@@ -73,7 +73,7 @@ def get_event_script(event):
     return [event_title.text, link, date, host, due]
     
 
-def content_list(script_title, script_body, events, day):
+def content_list(script_title, events, day):
     """
     event 데이터를 추출, issue의 Body로 정리함.
     param events -> 이벤트의 리스트, 쓰레기 데이터가 존재함. / soup Object List
@@ -81,7 +81,7 @@ def content_list(script_title, script_body, events, day):
     
     return str
     """
-    current_content = f"## {script_title}\n### {script_body}\n\n" # output
+    current_content = f"{script_title} \n \n"
 
     for event in events:
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
@@ -99,10 +99,9 @@ def __main__():
     event = split_event_html(html)
 
     
-    script_title = "Dev-Event"
-    script_body = "이벤트 알려드립니다."
+    script_title = '![](https://github.com/brave-people/Dev-Event/blob/master/static/title.PNG?raw=true)'
     
-    print(content_list(script_title, script_body, event, date_now))
+    print(content_list(script_title, event, date_now))
 
 if __name__ == '__main__':
     __main__()
