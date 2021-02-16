@@ -32,6 +32,7 @@ def find_due_day(body):
     arr[0] = month
     arr[1] = date
     arr[2] = month&date
+    arr[3] = start_day
     """
     str_body = str(body)
     dot_split_str = str_body.split('.')
@@ -42,7 +43,13 @@ def find_due_day(body):
     month = dot_split_str[-2][-2:]
     day = dot_split_str[-1][1:3]
     MnD = month + day
-    return [month,day,MnD]
+    start_day = ''
+    if len(dot_split_str) == 3:
+        start_day = find_due_day()
+    return [month,day,MnD,start_day]
+
+def find_start_day():
+    return ''
 
 def get_event_script(event):
     """
@@ -54,6 +61,7 @@ def get_event_script(event):
     arr[2] = date
     arr[3] = host
     arr[4] = due
+    arr[5] = start
     """
     event_body = event.findAll("li")
     event_title = event.find("strong")
@@ -73,7 +81,7 @@ def get_event_script(event):
     return [event_title.text, link, date, host, due]
     
 
-def content_list(script_title, events, day):
+def content_list(script_title, events, today):
     """
     event 데이터를 추출, issue의 Body로 정리함.
     param events -> 이벤트의 리스트, 쓰레기 데이터가 존재함. / soup Object List
@@ -86,7 +94,11 @@ def content_list(script_title, events, day):
     for event in events:
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
             event_arr = get_event_script(event)
-            if day <= int(event_arr[4]):
+            date_range = today + 100
+            if event_arr[4] == '':
+                
+            
+            if (today <= int(event_arr[4])) and ():
                 content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
                 
