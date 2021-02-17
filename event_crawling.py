@@ -20,7 +20,7 @@ def split_event_html(html):
     param range -> event의 위치 / int
     return soup Object List
     """
-    split_HTML = list(html.split('<h2>')[5:])
+    split_HTML = list(html.split('<h2>')[6:])
     soup = BeautifulSoup(split_HTML[0] + split_HTML[1], 'html.parser')
     return soup.findAll("li")
 
@@ -45,11 +45,14 @@ def find_due_day(body):
     MnD = month + day
     start_day = ''
     if len(dot_split_str) == 3:
-        start_day = find_due_day()
+        start_day = find_start_day(dot_split_str[0],dot_split_str[1])
     return [month,day,MnD,start_day]
 
-def find_start_day():
-    return ''
+def find_start_day(mon, day):
+    month = mon[-2:]
+    days = day[1:3]
+    MnD = month + days
+    return MnD
 
 def get_event_script(event):
     """
@@ -76,9 +79,11 @@ def get_event_script(event):
         
     date = event_body[2].text
     host = event_body[1].text
-    due = find_due_day(event_body[2])[2]
+    date_info = find_due_day(event_body[2])
+    due = date_info[2]
+    start = date_info[3]
     
-    return [event_title.text, link, date, host, due]
+    return [event_title.text, link, date, host, due, start]
     
 
 def content_list(script_title, events, today):
@@ -95,10 +100,12 @@ def content_list(script_title, events, today):
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
             event_arr = get_event_script(event)
             date_range = today + 100
-            if event_arr[4] == '':
+            if event_arr[5] == '':
+                date_lim = int(event_arr[4])
+            else:
+                date_lim = int(event_arr[5])
                 
-            
-            if (today <= int(event_arr[4])) and ():
+            if (today <= int(event_arr[4])) and (date_range >= date_lim):
                 content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
                 
@@ -106,7 +113,7 @@ def content_list(script_title, events, today):
                 
 def __main__():
     url = 'https://github.com/brave-people/Dev-Event'
-    date_now = 210 # 지금 날짜 int형으로
+    date_now = 217 # 지금 날짜 int형으로
     html = get_html(url)
     event = split_event_html(html)
 
