@@ -40,13 +40,16 @@ def find_due_day(body):
     expected
     '<li>신청: 02', ' 04(목) 14:00 / 02', ' 05(금) 14:00</li>'
     """
-    month = dot_split_str[-2][-2:]
-    day = dot_split_str[-1][1:3]
-    MnD = month + day
-    start_day = ''
-    if len(dot_split_str) == 3:
-        start_day = find_start_day(dot_split_str[0],dot_split_str[1])
-    return [month,day,MnD,start_day]
+    try:
+        month = dot_split_str[-2][-2:]
+        day = dot_split_str[-1][1:3]
+        MnD = month + day
+        start_day = ''
+        if len(dot_split_str) == 3:
+            start_day = find_start_day(dot_split_str[0],dot_split_str[1])
+        return [month,day,MnD,start_day]
+    except:
+        return [0,0,0,0]
 
 def find_start_day(mon, day):
     month = mon[-2:]
