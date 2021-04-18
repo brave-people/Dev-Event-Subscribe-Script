@@ -1,9 +1,9 @@
 name: Dev_Event_Crawler
 
 on:
-  push:
-    branches:
-      - main
+#   push:
+#     branches:
+#       - main
   schedule:
     - cron: '0 11 * * 0'
   # 꿀팁 : 한국의 자정은 "0 15 * * *"이다
