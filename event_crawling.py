@@ -45,6 +45,10 @@ def find_due_day(body):
         day = dot_split_str[-1][1:3]
         MnD = month + day
         start_day = ''
+        
+        // int형인지 확인 작업
+        int(MnD)
+        
         if len(dot_split_str) == 3:
             start_day = find_start_day(dot_split_str[0],dot_split_str[1])
         return [month,day,MnD,start_day]
