@@ -13,7 +13,7 @@ if __name__ == "__main__":
     
     # 스크립트 상단에 소개 및 공지문구
     # markdown 형식으로 적어주세요.
-    script_title = '![](https://github.com/brave-people/Dev-Event/blob/master/static/title-v3-md.png?raw=true)'
+    script_title = '<div align=center> <img src="https://github.com/brave-people/Dev-Event/blob/master/static/title-v3-md.png?raw=true"> \n \n __더 많은 행사를 보고 싶다면? [Github Dev Event](https://github.com/brave-people/Dev-Event) 로 오세요!__ </div>'
 
     seoul_timezone = timezone('Asia/Seoul')
     today = datetime.now(seoul_timezone)
