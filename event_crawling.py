@@ -21,7 +21,7 @@ def split_event_html(html):
     param range -> event의 위치 / int
     return soup Object List
     """
-    split_HTML = list(html.split('<h2>')[7:])
+    split_HTML = list(html.split('<h2>')[8:])
     soup = BeautifulSoup(split_HTML[0] + split_HTML[1], 'html.parser')
     return soup.findAll("li")
 
