@@ -22,7 +22,7 @@ def split_event_html(html):
     return soup Object List
     """
     split_HTML = list(html.split('<h2>')[8:])
-    soup = BeautifulSoup(split_HTML[0] + split_HTML[1], 'html.parser')
+    soup = BeautifulSoup(split_HTML[0] + split_HTML[1] + split_HTML[2], 'html.parser')
     return soup.findAll("li")
 
 def find_day_by_body(body):
@@ -113,7 +113,7 @@ def content_list(script_title, events, today):
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
             event_arr = get_event_script(event)
             date_range = today + 100
-            if event_arr[5] == '':
+            if event_arr[5] == '0':
                 date_lim = int(event_arr[4])
             else:
                 date_lim = int(event_arr[5])
