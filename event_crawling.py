@@ -98,6 +98,20 @@ def get_event_script(event):
     
     return [event_title.text, link, date, host, due, start]
     
+def check_new_year(date, today):
+    """
+    연도의 변화를 감지하기 위함. 
+    11월이 넘으면 1월 2월에 대한 정보에 1200을 더해서 처리함.
+    param date -> 행사 날짜
+    param today -> 오늘 날짜
+    
+    return date(int)
+    """
+    if today > 1100:
+        if date < 300:
+            return date + 1200
+
+    return date
     
 def content_list(script_title, events, today):
     """
@@ -117,7 +131,8 @@ def content_list(script_title, events, today):
                 date_lim = int(event_arr[4])
             else:
                 date_lim = int(event_arr[5])
-                
+            
+            date_lim = check_new_year(date_lim, today)
             if (today <= int(event_arr[4])) and (date_range >= date_lim):
                 content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
