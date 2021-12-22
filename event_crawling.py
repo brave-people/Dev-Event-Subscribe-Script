@@ -98,20 +98,24 @@ def get_event_script(event):
     
     return [event_title.text, link, date, host, due, start]
     
-def check_new_year(date, today):
+
+def parse_number_date(date, today):
     """
-    연도의 변화를 감지하기 위함. 
+    숫자형 String으로 된 날짜를 int형으로 파싱을 함.
+    또한, 연도 변화에 맞추는 작업을 함께 진행함.
     11월이 넘으면 1월 2월에 대한 정보에 1200을 더해서 처리함.
     param date -> 행사 날짜
     param today -> 오늘 날짜
     
     return date(int)
     """
-    if today > 1100:
-        if date < 300:
-            return date + 1200
+    num_date = int(date)
 
-    return date
+    if today > 1100:
+        if num_date < 300:
+            return num_date + 1200
+
+    return num_date
     
 def content_list(script_title, events, today):
     """
@@ -126,14 +130,17 @@ def content_list(script_title, events, today):
     for event in events:
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
             event_arr = get_event_script(event)
+
+            event_arr[4] = parse_number_date(event_arr[4], today)
+            event_arr[5] = parse_number_date(event_arr[5], today)
+
             date_range = today + 100
             if event_arr[5] == '0':
-                date_lim = int(event_arr[4])
+                date_lim = event_arr[4]
             else:
-                date_lim = int(event_arr[5])
+                date_lim = event_arr[5]
             
-            date_lim = check_new_year(date_lim, today)
-            if (today <= int(event_arr[4])) and (date_range >= date_lim):
+            if (today <= event_arr[4]) and (date_range >= date_lim):
                 content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
                 
@@ -141,11 +148,11 @@ def content_list(script_title, events, today):
                 
 def __main__():
     url = 'https://github.com/brave-people/Dev-Event'
-    date_now = 424 # 지금 날짜 int형으로
+    date_now = 1223 # 지금 날짜 int형으로
     html = get_html(url)
     event = split_event_html(html)
     
-    print(content_list(event, date_now))
+    print(content_list("ㅈㅂㄷㅂ",event, date_now))
     # print(event)
 
 if __name__ == '__main__':
