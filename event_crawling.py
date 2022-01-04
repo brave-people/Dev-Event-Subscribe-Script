@@ -99,23 +99,31 @@ def get_event_script(event):
     return [event_title.text, link, date, host, due, start]
     
 
-def parse_number_date(date, today):
+def is_activate_event(first_date, second_date, today) -> bool:
     """
-    숫자형 String으로 된 날짜를 int형으로 파싱을 함.
-    또한, 연도 변화에 맞추는 작업을 함께 진행함.
-    11월이 넘으면 1월 2월에 대한 정보에 1200을 더해서 처리함.
-    param date -> 행사 날짜
-    param today -> 오늘 날짜
+    이벤트가 현재 날짜에 진행되고 있는지를 파악함
+    param first_date -> 이벤트의 종료 일자. / string
+    param second_date -> 이벤트의 시작 일자. 없다면 '0'이 들어가게 됨. / string
+    param today -> 오늘 날짜. 마감된 날짜를 가리는 기준이 됨. / int
     
-    return date(int)
+    return bool
     """
-    num_date = int(date)
+    event_start_date = 0
+    event_end_date = int(first_date)
 
-    if today > 1100:
-        if num_date < 300:
-            return num_date + 1200
+    if second_date == '0':
+        event_start_date = int(first_date)
+    else:
+        event_start_date = int(second_date)
+        event_end_date = int(first_date)
 
-    return num_date
+        if event_start_date > event_end_date:
+            event_end_date += 1200
+            today += 1200
+
+    date_range = today + 100
+
+    return (today <= event_end_date) and (date_range >= event_start_date)
     
 def content_list(script_title, events, today):
     """
@@ -130,17 +138,8 @@ def content_list(script_title, events, today):
     for event in events:
         if len(event.findAll("li")) > 0: # 내용이 존재하는 Object만 연산
             event_arr = get_event_script(event)
-
-            event_arr[4] = parse_number_date(event_arr[4], today)
-            event_arr[5] = parse_number_date(event_arr[5], today)
-
-            date_range = today + 100
-            if event_arr[5] == '0':
-                date_lim = event_arr[4]
-            else:
-                date_lim = event_arr[5]
             
-            if (today <= event_arr[4]) and (date_range >= date_lim):
+            if is_activate_event(event_arr[4], event_arr[5], today):
                 content = f"[{event_arr[0]}]({event_arr[1]})" + "\n -" + event_arr[2] + "\n -"+ event_arr[3] + " <br/>\n "
                 current_content += content
                 
@@ -148,11 +147,11 @@ def content_list(script_title, events, today):
                 
 def __main__():
     url = 'https://github.com/brave-people/Dev-Event'
-    date_now = 1223 # 지금 날짜 int형으로
+    date_now = 105 # 지금 날짜 int형으로
     html = get_html(url)
     event = split_event_html(html)
     
-    print(content_list("ㅈㅂㄷㅂ",event, date_now))
+    print(content_list("테스트 공지", event, date_now))
     # print(event)
 
 if __name__ == '__main__':
