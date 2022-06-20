@@ -2,6 +2,8 @@ name: Dev_Event_Crawler
 
 on:
   push:
+    branches:
+      - build.*
     tags:
       - build.*
   schedule:
