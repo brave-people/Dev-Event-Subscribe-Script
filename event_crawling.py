@@ -21,7 +21,7 @@ def split_event_html(html):
     param range -> event의 위치 / int
     return soup Object List
     """
-    split_HTML = list(html.split('<h2')[7:])
+    split_HTML = list(html.split('<h2')[6:])
     soup = BeautifulSoup(split_HTML[0] + split_HTML[1] + split_HTML[2], 'html.parser')
     return soup.findAll("li")
 
@@ -139,7 +139,7 @@ def content_list(script_title, events, today):
                 
 def __main__():
     url = 'https://github.com/brave-people/Dev-Event'
-    date_now = 717 # 지금 날짜 int형으로
+    date_now = 206 # 지금 날짜 int형으로
     html = get_html(url)
     event = split_event_html(html)
     
